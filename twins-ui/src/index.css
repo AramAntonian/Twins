@@ -1,0 +1,13 @@
+* {
+  font-size: 18px;
+  font-family: 'Inter', sans-serif;
+  margin: 0
+}
+
+input, button {
+  outline: none;
+  border: none
+}
+input::placeholder {
+  color: rgb(60, 60, 60); /* Sets the placeholder text color to red */
+}
