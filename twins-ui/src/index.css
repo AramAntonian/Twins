@@ -11,3 +11,13 @@ input, button {
 input::placeholder {
   color: rgb(60, 60, 60); /* Sets the placeholder text color to red */
 }
+
+input[type="radio"]:checked {
+  background-color: #E0A24E; /* Background color when checked */
+  border-color: #E0A24E; /* Border color when checked */
+  accent-color: #E0A24E;
+}
+input[type="radio"] {
+  background-color: none; /* Background color when checked */
+  border: 1px solid #E0A24E; /* Border color when checked */
+}

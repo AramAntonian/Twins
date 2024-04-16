@@ -29,6 +29,8 @@ function Header() {
             background: 'none',
             position: 'absolute',
             width: '100%',
+            top: 0,
+            left: 0,
             boxSizing: 'border-box',
             zIndex: 100
 

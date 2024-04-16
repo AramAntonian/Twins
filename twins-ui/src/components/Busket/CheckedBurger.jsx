@@ -1,8 +1,7 @@
-import React, { useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import burger from '../svg/cheesburger.svg'
 
-
-function BurgerInfo({ name, price, setTotalPrice }) {
+function CheckedBurger({ name, price, setTotalPrice, last}) {
     const [quantity, setQuantity] = useState(1)
 
     useEffect(() => {
@@ -22,27 +21,32 @@ function BurgerInfo({ name, price, setTotalPrice }) {
     return (
         <div style={{
             display: 'flex',
-            gap: '60px',
+            gap: '10px',
             alignItems: 'center',
-            borderBottom: '1px solid #E0A24E'
+            width: '100%',
+            borderBottom: last ? '1px solid #E0A24E' : ''
         }}>
-            <img src={burger} alt='burger' width={200} />
+            <img src={burger} alt='burger' width={150} />
             <div style={{
-                marginTop: '50px',
-                fontSize: '24px',
-                width: '320px',
-                textWrap: 'nowrap',
-                whiteSpace: 'nowrap'
-            }}>{name}</div>
-            <div style={{
-                marginTop: '50px',
-                fontSize: '24px',
-            }}>{price}</div>
+                display: 'flex',
+                flexDirection: 'column',
+                gap: '5px',
+                marginTop: '40px'
+            }}>
+                <div style={{
+                    fontSize: '22px',
+                    whiteSpace: 'nowrap',
+                    width: '300px'
+                }}>{name}</div>
+                <div style={{
+                    fontSize: '22px'
+                }}>{price} AMD</div>
+            </div>
             <div style={{
                 display: 'flex',
                 gap: '10px',
                 alignItems: 'center',
-                marginTop: '50px'
+                marginTop: '40px',
             }}>
                 <div
                     onClick={remove}
@@ -70,12 +74,8 @@ function BurgerInfo({ name, price, setTotalPrice }) {
                         cursor: 'pointer'
                     }}>+</div>
             </div>
-            <div style={{
-                fontSize: '24px',
-                marginTop: '50px'
-            }}>{price * quantity}</div>
         </div >
     )
 }
 
-export default BurgerInfo
+export default CheckedBurger

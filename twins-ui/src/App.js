@@ -7,6 +7,8 @@ import ForgetPassword from "./pages/SignIn/ForgetPassword/ForgetPassword";
 import ProfilePage from "./pages/Profile/ProfilePage";
 import AddCard from "./components/Profile/AddCard";
 import Busket from "./components/Busket/Bukset";
+import Menu from "./components/Menu/Menu";
+import Burger from "./components/Menu/Burger";
 
 function App() {
   return (
@@ -19,6 +21,8 @@ function App() {
       <Route path='user/:user' element={<ProfilePage />} />
       <Route path='user/:user/addCard' element={<AddCard />} />
       <Route path = 'busket' element = {<Busket />}/>
+      <Route path = 'menu' element = {<Menu />}/>
+      <Route path = 'menu/burger/:name' element = {<Burger />}/>
     </Routes>
   );
 }
