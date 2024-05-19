@@ -3,22 +3,34 @@ import busket from '../svg/busket.svg'
 import busket_yellow from '../svg/busket_yellow.svg'
 import profile from '../svg/profile.svg'
 import profile_yellow from '../svg/profile_yellow.svg'
+import { useNavigate } from 'react-router'
+import { useEffect, useState } from 'react'
 
 function Header() {
-    function handleRouting(route) {
-        if(route !== '/profile') {
-            window.location.href = route
-        } else {
+    const [user, setUser] = useState({})
+    const navigate = useNavigate()
+
+    useEffect(() => {
+        (async function () {
             const res = localStorage.getItem('USER')
-            if(res){
-                const data = JSON.parse(res)
-                window.location.href = '/user/' + data.fullName
+            if (res) {
+                const data = await JSON.parse(res)
+                setUser(data)
+            }
+        })()
+    }, [])
+
+    function handleRouting(route) {
+        if (route !== '/profile') {
+            navigate(route)
+        } else {
+            if (user.fullName) {
+                navigate('/user/' + user.fullName)
             } else {
-                window.location.href = '/signin'
+                navigate('/signin')
             }
         }
     }
-    console.log(window.location.href);
 
     return (
         <div style={{
@@ -37,7 +49,7 @@ function Header() {
         }}>
             <img src={logo} alt='logo' onClick={() => handleRouting('/')} style={{
                 cursor: 'pointer'
-            }}/>
+            }} />
             <div style={{
                 display: 'flex',
                 gap: '20px'
@@ -68,13 +80,13 @@ function Header() {
                         cursor: 'pointer'
                     }}
                     onClick={() => handleRouting('/profile')}
-                ><img src={window.location.href.includes('profile') ? profile_yellow : profile} alt='profile' /></div>
+                ><img src={window.location.href.includes('user') ? profile_yellow : profile} alt='profile' width={"35x"} /></div>
                 <div
                     style={{
                         cursor: 'pointer'
                     }}
                     onClick={() => handleRouting('/busket')}
-                ><img src={ window.location.href.includes('busket') ? busket_yellow : busket } alt='busket' /></div>
+                ><img src={window.location.href.includes('busket') ? busket_yellow : busket} alt='busket' width={"35x"} /></div>
             </div>
             <div style={{
                 background: 'black',

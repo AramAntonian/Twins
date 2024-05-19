@@ -3,11 +3,10 @@ import { useNavigate } from 'react-router-dom'
 import Modal from '@mui/material/Modal'
 import dots from '../svg/dots.svg'
 
-function ProfileCard({ fullName, phone, email, cards }) {
+function ProfileCard({ fullName, phone, email, cards, edit, setEdit }) {
     const [open, setOpen] = useState(false)
     const navigate = useNavigate()
     const [phoneInp, setPhoneInp] = useState(phone)
-    const [edit, setEdit] = useState(false)
     const [name, setName] = useState('')
     const [surname, setSurname] = useState('')
     const [emailInp, setEmailInp] = useState('')
@@ -20,7 +19,7 @@ function ProfileCard({ fullName, phone, email, cards }) {
         const emailRegex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
 
         if (!nameRegex.test(name)) {
-            setSurname(fullName.split(' ')[1])
+            setName(fullName.split(' ')[0])
         }
         if (!nameRegex.test(surname)) {
             setSurname(fullName.split(' ')[1])
@@ -31,7 +30,23 @@ function ProfileCard({ fullName, phone, email, cards }) {
         if (!emailRegex.test(emailInp)) {
             setEmailInp(email)
         }
-        setEdit(false)
+        (async function () {
+            const body = { fullName: name + ' ' + surname, phone: phoneInp, email: emailInp, oldPhone: phone }
+            const res = await fetch('http://localhost:3002/edit', {
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                method: 'POST',
+                body: JSON.stringify(body)
+            });
+            const data = await res.json()
+            if(data.error) {
+                alert(data.error)
+            } else {
+                localStorage.setItem('USER', JSON.stringify(data.user))
+                setEdit(false)
+            }
+        })()
     }
 
     function handleDelete() {
@@ -69,6 +84,11 @@ function ProfileCard({ fullName, phone, email, cards }) {
                 alert('An error occurred during registration.');
             }
         })();
+    }
+
+    function logout() {
+        localStorage.removeItem('USER')
+        window.location.href = '/'
     }
 
     useEffect(() => {
@@ -112,7 +132,6 @@ function ProfileCard({ fullName, phone, email, cards }) {
                         <div style={{ textAlign: 'center', zIndex: 2, color: "white", fontSize: '50px' }}>{fullName}</div>
                         : null
                 }
-
                 {
                     edit ?
                         <input style={{
@@ -215,26 +234,10 @@ function ProfileCard({ fullName, phone, email, cards }) {
                             zIndex: 2,
                             justifyContent: 'space-between'
                         }}>Payment methods {edit && <img src={dots}
-                        onClick={() => {navigate('addCard')}}
-                        alt='dots' style={{
-                            cursor: 'pointer'
-                        }} />}</div>
-                }
-                {
-                    !edit ?
-                        <div
-                            onClick={() => setOpen(true)}
-                            style={{
-                                fontSize: '28px',
-                                color: 'pink',
-                                padding: '10px 5px',
-                                cursor: 'pointer',
-                                zIndex: 2,
-                                width: 'fit-content'
-                            }}>
-                            Delete account
-                        </div>
-                        : null
+                            onClick={() => { navigate('addCard') }}
+                            alt='dots' style={{
+                                cursor: 'pointer'
+                            }} />}</div>
                 }
                 <div style={{
                     display: 'flex',
@@ -253,21 +256,62 @@ function ProfileCard({ fullName, phone, email, cards }) {
                         Edit Profile
                     </span>
                 </div>
-                <div
-                    onClick={handleSave}
-                    style={{
-                        width: '100%',
-                        background: '#E0A24E',
-                        borderRadius: '15px',
-                        padding: '10px 0',
-                        cursor: 'pointer',
-                        textAlign: 'center',
-                        color: 'white',
-                        fontSize: "28px",
-                        zIndex: 2
-                    }}>
-                    Save
-                </div>
+                {
+                    !edit ?
+
+                        <div style={{
+                            display: 'flex',
+                            justifyContent: 'space-between'
+                        }}>
+
+                            <div
+                                onClick={logout}
+                                style={{
+                                    width: '45%',
+                                    background: '#E0A24E',
+                                    borderRadius: '15px',
+                                    padding: '10px 0',
+                                    cursor: 'pointer',
+                                    textAlign: 'center',
+                                    color: 'white',
+                                    fontSize: "28px",
+                                    zIndex: 2
+                                }}>
+                                Log out
+                            </div>
+                            <div
+                                onClick={() => { setOpen(true) }}
+                                style={{
+                                    width: '45%',
+                                    background: '#AD1C23',
+                                    borderRadius: '15px',
+                                    padding: '10px 0',
+                                    cursor: 'pointer',
+                                    textAlign: 'center',
+                                    color: 'white',
+                                    fontSize: "28px",
+                                    zIndex: 2
+                                }}>
+                                Delete account
+                            </div>
+                        </div>
+                        :
+                        <div
+                            onClick={handleSave}
+                            style={{
+                                width: '100%',
+                                background: '#E0A24E',
+                                borderRadius: '15px',
+                                padding: '10px 0',
+                                cursor: 'pointer',
+                                textAlign: 'center',
+                                color: 'white',
+                                fontSize: "28px",
+                                zIndex: 2
+                            }}>
+                            Save
+                        </div>
+                }
             </div>
             <Modal
                 open={open}

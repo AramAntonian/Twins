@@ -1,4 +1,4 @@
-import { useLayoutEffect, useState } from "react"
+import { useEffect, useLayoutEffect, useState } from "react"
 import Footer from "../../components/Footer/Footer"
 import Header from "../../components/Header/Header"
 import ProfileCard from "../../components/Profile/ProfileCard"
@@ -8,9 +8,10 @@ import { useNavigate } from 'react-router-dom'
 
 function ProfilePage() {
     const [user, setUser] = useState({})
+    const [edit, setEdit] = useState(false)
     const navigate = useNavigate()
 
-    useLayoutEffect(() => {
+    useEffect(() => {
         (async function () {
             const res = localStorage.getItem('USER')
             const data = await JSON.parse(res)
@@ -21,7 +22,7 @@ function ProfilePage() {
                 navigate('/signin')
             }
         })()
-    }, [])
+    }, [edit])
 
     return (
 
@@ -33,7 +34,7 @@ function ProfilePage() {
                 <img src={bg} alt='bg' style={{
                     width: '100%'
                 }} />
-                <ProfileCard fullName={user.fullName} phone={user.phone} email={user.email} cards={user.cards}/>
+                <ProfileCard fullName={user.fullName} phone={user.phone} email={user.email} edit={edit} setEdit={setEdit}/>
             </div>
             <Footer />
         </>
