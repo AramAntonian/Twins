@@ -1,15 +1,51 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Header from "../Header/Header";
 import bg from '../svg/paper_black.svg'
-import Burgers from "./Burgers";
 import Footer from "../Footer/Footer";
-import Fries from "./Fries";
-import Sauces from "./Sauces";
-import Drinks from "./Drinks";
-
+import add from '../svg/add.svg'
+import { useNavigate } from "react-router";
+import Product from "./Product";
 
 function Menu() {
     const [choosen, setChoosen] = useState('burgers')
+    const [list, setList] = useState([])
+    const navigate = useNavigate()
+    const [user, setUser] = useState({})
+    const [flag, setFlag] = useState(false)
+
+    useEffect(() => {
+        (async function () {
+            const res = localStorage.getItem('USER')
+            if (res) {
+                const data = await JSON.parse(res)
+                setUser(data)
+            }
+        })()
+    }, [])
+
+    function handleAdd() {
+        navigate(`/menu/${choosen}/AddProduct`)
+    }
+
+    useEffect(() => {
+        (async function () {
+            const body = { type: choosen }
+            const res = await fetch('http://localhost:3002/menu', {
+                headers: {
+                    "Content-Type": 'application/json',
+                },
+                method: 'POST',
+                body: JSON.stringify(body)
+            })
+            const data = await res.json()
+            if (data.error) {
+                alert(data.error)
+            } else {
+                setList(data.menu)
+            }
+        })()
+
+    }, [choosen, flag])
 
     return (
         <div>
@@ -18,6 +54,7 @@ function Menu() {
                 height: '100px',
                 background: 'black',
                 width: '100%',
+                position: 'relative'
             }} />
             <div style={{
                 background: 'black',
@@ -88,13 +125,13 @@ function Menu() {
                                     justifyContent: 'center',
                                     gap: '100px',
                                 }}>
-                                    <Burgers name={'Original Cheeseburger'} price={'23000AMD'} />
-                                    <Burgers name={'Original Cheeseburger'} price={'23000AMD'} />
-                                    <Burgers name={'Creamy Smash'} price={'13000AMD'} />
-                                    <Burgers name={'Royal Cheese'} price={'23000AMD'} />
-                                    <Burgers name={'Original Cheeseburger'} price={'23000AMD'} />
+                                    {
+                                        list.map((el, idx) => (
+                                            <Product key={idx} name={el.name} price={el.price + 'AMD'} src={el.src} id={el.id} setFlag={setFlag} />
+                                        ))
+                                    }
                                 </div>
-                                <div style={{
+                                {/* <div style={{
                                     marginTop: '100px'
                                 }}>
                                     <div style={{
@@ -108,13 +145,8 @@ function Menu() {
                                         justifyContent: 'center',
                                         gap: '100px',
                                     }}>
-                                        <Burgers name={'Original Cheeseburger'} price={'23000AMD'} />
-                                        <Burgers name={'Original Cheeseburger'} price={'23000AMD'} />
-                                        <Burgers name={'Creamy Smash'} price={'13000AMD'} />
-                                        <Burgers name={'Royal Cheese'} price={'23000AMD'} />
-                                        <Burgers name={'Original Cheeseburger'} price={'23000AMD'} />
                                     </div>
-                                </div>
+                                </div> */}
                             </div>
                             : choosen === 'fries' ?
                                 <div style={{
@@ -127,11 +159,11 @@ function Menu() {
                                         justifyContent: 'center',
                                         gap: '100px',
                                     }}>
-                                        <Fries name={'Original Cheeseburger'} price={'23000AMD'} />
-                                        <Fries name={'Original Cheeseburger'} price={'23000AMD'} />
-                                        <Fries name={'Creamy Smash'} price={'13000AMD'} />
-                                        <Fries name={'Royal Cheese'} price={'23000AMD'} />
-                                        <Fries name={'Original Cheeseburger'} price={'23000AMD'} />
+                                        {
+                                            list.map((el, idx) => (
+                                                <Product key={idx} name={el.name} price={el.price + 'AMD'} src={el.src} id={el.id} setFlag={setFlag} />
+                                            ))
+                                        }
                                     </div>
                                 </div>
                                 : choosen === 'sauces' ?
@@ -145,11 +177,11 @@ function Menu() {
                                             justifyContent: 'center',
                                             gap: '100px',
                                         }}>
-                                            <Sauces name={'sauces'} price={'23000AMD'} />
-                                            <Sauces name={'sauces'} price={'23000AMD'} />
-                                            <Sauces name={'sauces'} price={'13000AMD'} />
-                                            <Sauces name={'sauces'} price={'23000AMD'} />
-                                            <Sauces name={'sauces'} price={'23000AMD'} />
+                                            {
+                                                list.map((el, idx) => (
+                                                    <Product key={idx} name={el.name} price={el.price + 'AMD'} src={el.src} id={el.id} setFlag={setFlag} />
+                                                ))
+                                            }
                                         </div>
                                     </div>
                                     :
@@ -163,15 +195,20 @@ function Menu() {
                                             justifyContent: 'center',
                                             gap: '100px',
                                         }}>
-                                            <Drinks name={'drinks'} price={'23000AMD'} />
-                                            <Drinks name={'drinks'} price={'23000AMD'} />
-                                            <Drinks name={'drinks'} price={'13000AMD'} />
-                                            <Drinks name={'drinks'} price={'23000AMD'} />
-                                            <Drinks name={'drinks'} price={'23000AMD'} />
+                                            {
+                                                list.map((el, idx) => (
+                                                    <Product key={idx} name={el.name} price={el.price + 'AMD'} src={el.src} id={el.id} setFlag={setFlag} />
+                                                ))
+                                            }
                                         </div>
                                     </div>
                     }
                 </div>
+                {
+                    user.fullName?.includes('ADMIN') ?
+                        <img src={add} alt={'add'} style={{ position: 'sticky', bottom: '30px', left: '90%' }} onClick={handleAdd} />
+                        : null
+                }
             </div>
 
             <Footer />

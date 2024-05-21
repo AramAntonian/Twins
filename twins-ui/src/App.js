@@ -9,6 +9,9 @@ import AddCard from "./components/Profile/AddCard";
 import Busket from "./components/Busket/Bukset";
 import Menu from "./components/Menu/Menu";
 import Burger from "./components/Menu/Burger";
+import AddProdcutPage from "./pages/Admin/AddProduct/AddProductPage";
+import AddIngredients from "./pages/Admin/AddProduct/AddIngredients";
+import UsersPage from "./pages/Admin/Users/UsersPage";
 
 function App() {
   return (
@@ -20,9 +23,12 @@ function App() {
       <Route path='/forgetpassword' element={<ForgetPassword />} />
       <Route path='user/:user' element={<ProfilePage />} />
       <Route path='user/:user/addCard' element={<AddCard />} />
-      <Route path = 'busket' element = {<Busket />}/>
-      <Route path = 'menu' element = {<Menu />}/>
-      <Route path = 'menu/burger/:name' element = {<Burger />}/>
+      <Route path='busket' element={<Busket />} />
+      <Route path='menu' element={<Menu />} />
+      <Route path='menu/burger/:name' element={<Burger />} />
+      <Route path='/menu/:product/AddProduct' element={<AddProdcutPage />} />
+      <Route path='menu/ingredients/add' element={<AddIngredients />} />
+      <Route path='users' element={<UsersPage />} />
     </Routes>
   );
 }

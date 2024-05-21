@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import Footer from '../Footer/Footer'
 import Header from '../Header/Header'
 import BurgerInfo from './BurgerInfo'
@@ -7,8 +7,36 @@ import Checkout from './Checkout'
 function Busket() {
     const [totalPrice, setTotalPrice] = useState(0)
     const [checkout, setCheckout] = useState(false)
+    const [busket, setBusket] = useState([])
+    const [user, setUser] = useState({})
 
+    useEffect(() => {
+        const r = localStorage.getItem('USER')
+        if (r) {
+            (async function () {
+                const d = JSON.parse(r)
+                setUser(r)
+                const body = { userId: d.id }
+                const res = await fetch('http://localhost:3002/busket', {
+                    headers: {
+                        "Content-Type": 'application/json',
+                    },
+                    method: 'POST',
+                    body: JSON.stringify(body)
+                })
+                const data = await res.json()
+                if (data.error) {
+                    alert(data.error)
+                } else {
+                    console.log(data.busket);
+                    setBusket(data.busket)
+                }
+            })()
+        } else {
+            alert('register to add products')
+        }
 
+    }, [checkout])
 
     return (
         <>
@@ -56,17 +84,20 @@ function Busket() {
                                         }}>Total Price</div>
                                     </div>
                                 </div>
-
-                                <BurgerInfo name="cheesburger" price={2000} setTotalPrice={setTotalPrice} />
-                                <BurgerInfo name="Chicken Honey Mustard" price={1500} setTotalPrice={setTotalPrice} />
-                                <BurgerInfo name="Bacon Truffle" price={3000} setTotalPrice={setTotalPrice} />
+                                {
+                                    busket?.map(el => (
+                                        <BurgerInfo name={el.name} price={el.price} setTotalPrice={setTotalPrice} id={el.id} userId={user.id} count = {el.count}/>
+                                    ))
+                                }
                                 <div style={{
                                     width: '100%',
+                                    position: 'absolute',
+                                    bottom: '0',
                                     background: 'white',
                                     padding: '20px 50px 10px 50px',
                                     display: 'flex',
-                                    bottom: 0,
                                     boxSizing: 'border-box',
+                                    left: 0,
                                     alignItems: 'center',
                                     justifyContent: "space-between",
                                     borderRadius: '20px',
@@ -85,7 +116,7 @@ function Busket() {
                                     <div style={{ fontSize: '24px' }}>Total: {totalPrice} AMD</div>
                                 </div>
                             </>
-                            : <Checkout />
+                            : <Checkout list={busket} userId={ user.id} />
                     }
                 </div>
             </div>

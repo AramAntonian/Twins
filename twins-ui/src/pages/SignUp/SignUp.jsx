@@ -33,38 +33,22 @@ function SignUp() {
                 phone,
                 password
             };
-            try {
-                const res = await fetch('http://localhost:3002', {
-                    headers: {
-                        "Content-Type": "application/json",
-                    },
-                    method: 'PUT',
-                    body: JSON.stringify(body)
-                });
-                if (!res.ok) {
-                    throw new Error('Network response was not ok');
-                }
-                const data = await res.json();
-                if (data.registered) {
-                    alert('Registration successful!');
-                    navigate('/user/' + fullName.trim())
-                    const user = {
-                        id: 1,
-                        fullName: 'Aram Antonyan',
-                        phone: '099909350',
-                        cards: [],
-                        email: '',
-                        PASSWORD: 'Aram#123'
-                      }
-                      const json = JSON.stringify(user)
-                      localStorage.removeItem('USER')
-                      localStorage.setItem('USER', json)
-                } else {
-                    alert('Registration failed.');
-                }
-            } catch (error) {
-                console.error('Error during signup:', error);
-                alert('An error occurred during registration.');
+            const res = await fetch('http://localhost:3002', {
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                method: 'PUT',
+                body: JSON.stringify(body)
+            });
+            const data = await res.json();
+            if (!data.error) {
+                alert('Registration successful!');
+                const json = JSON.stringify(data.user)
+                localStorage.removeItem('USER')
+                localStorage.setItem('USER', json)
+                navigate('/user/' + fullName.trim())
+            } else {
+                alert(data.error);
             }
         })();
     }

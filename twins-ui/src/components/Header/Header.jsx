@@ -68,6 +68,17 @@ function Header() {
                         color: window.location.href.includes('menu') ? '#E0A24E' : 'white',
                         cursor: 'pointer'
                     }}>Menu</div>
+                {
+                    user.fullName?.includes('ADMIN') ?
+                        <div
+                            onClick={() => handleRouting('/users')}
+                            style={{
+                                fontSize: '32px',
+                                color: window.location.href.includes('users') ? '#E0A24E' : 'white',
+                                cursor: 'pointer'
+                            }}>Users</div>
+                        : null
+                }
                 <div
                     onClick={() => handleRouting('/contact')}
                     style={{
@@ -80,7 +91,7 @@ function Header() {
                         cursor: 'pointer'
                     }}
                     onClick={() => handleRouting('/profile')}
-                ><img src={window.location.href.includes('user') ? profile_yellow : profile} alt='profile' width={"35x"} /></div>
+                ><img src={window.location.href.includes('user/') ? profile_yellow : profile} alt='profile' width={"35x"} /></div>
                 <div
                     style={{
                         cursor: 'pointer'

@@ -1,15 +1,17 @@
 import { useEffect, useState } from "react"
 import CheckedBurger from "./CheckedBurger"
 import ThankYou from "./ThankYou"
+import { Navigate, useNavigate } from "react-router"
 
-function Checkout() {
+function Checkout({ list, userId }) {
     const [totalPrice, setTotalPrice] = useState(0)
     const [buy, setBuy] = useState(false)
-
+    const navigate = useNavigate()
     useEffect(() => {
         if (buy) {
             setTimeout(() => {
                 setBuy(false)
+                navigate('/')
             }, 3000)
         }
     }, [buy])
@@ -94,9 +96,11 @@ function Checkout() {
                     fontSize: '30px'
                 }}>Order summary</div>
                 <div>
-                    <CheckedBurger name={'cheesburger'} price={1500} setTotalPrice={setTotalPrice} />
-                    <CheckedBurger name={'Chicken Honey Mustard'} price={3500} setTotalPrice={setTotalPrice} />
-                    <CheckedBurger name={'Bacon Truffle'} price={2000} setTotalPrice={setTotalPrice} last={true} />
+                    {
+                        list.map((el, idx) => (
+                            <CheckedBurger name={el.name} photo = {el.src} price={el.price} setTotalPrice={setTotalPrice} key={idx} id = {el.id} userId={userId}  count={el.count}/>
+                        ))
+                    }
                 </div>
             </div>
             <div style={{

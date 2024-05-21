@@ -6,6 +6,7 @@ import dots from '../svg/dots.svg'
 function ProfileCard({ fullName, phone, email, cards, edit, setEdit }) {
     const [open, setOpen] = useState(false)
     const navigate = useNavigate()
+
     const [phoneInp, setPhoneInp] = useState(phone)
     const [name, setName] = useState('')
     const [surname, setSurname] = useState('')
@@ -40,7 +41,7 @@ function ProfileCard({ fullName, phone, email, cards, edit, setEdit }) {
                 body: JSON.stringify(body)
             });
             const data = await res.json()
-            if(data.error) {
+            if (data.error) {
                 alert(data.error)
             } else {
                 localStorage.setItem('USER', JSON.stringify(data.user))
@@ -129,7 +130,7 @@ function ProfileCard({ fullName, phone, email, cards, edit, setEdit }) {
                 }}></div>
                 {
                     !edit ?
-                        <div style={{ textAlign: 'center', zIndex: 2, color: "white", fontSize: '50px' }}>{fullName}</div>
+                        <div style={{ textAlign: 'center', zIndex: 2, color: "white", fontSize: '50px' }}>{fullName?.includes('ADMIN') ? 'ADMIN' : fullName}</div>
                         : null
                 }
                 {
@@ -251,7 +252,7 @@ function ProfileCard({ fullName, phone, email, cards, edit, setEdit }) {
                         onClick={() => { setEdit(true) }}
                         style={{
                             cursor: 'pointer',
-                            visibility: edit ? 'hidden' : 'visible'
+                            visibility: edit || fullName?.split(' ')[0] === 'ADMIN' ? 'hidden' : 'visible'
                         }}>
                         Edit Profile
                     </span>
@@ -267,13 +268,13 @@ function ProfileCard({ fullName, phone, email, cards, edit, setEdit }) {
                             <div
                                 onClick={logout}
                                 style={{
-                                    width: '45%',
                                     background: '#E0A24E',
                                     borderRadius: '15px',
                                     padding: '10px 0',
                                     cursor: 'pointer',
                                     textAlign: 'center',
                                     color: 'white',
+                                    width: fullName?.split(" ")[0] === 'ADMIN' ? '100%' : '45%',
                                     fontSize: "28px",
                                     zIndex: 2
                                 }}>
@@ -289,6 +290,7 @@ function ProfileCard({ fullName, phone, email, cards, edit, setEdit }) {
                                     cursor: 'pointer',
                                     textAlign: 'center',
                                     color: 'white',
+                                    display: fullName?.split(" ")[0] === 'ADMIN' ? 'none' : 'block',
                                     fontSize: "28px",
                                     zIndex: 2
                                 }}>

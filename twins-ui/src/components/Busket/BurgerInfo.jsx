@@ -2,21 +2,55 @@ import React, { useEffect, useState } from 'react'
 import burger from '../svg/cheesburger.svg'
 
 
-function BurgerInfo({ name, price, setTotalPrice }) {
-    const [quantity, setQuantity] = useState(1)
+function BurgerInfo({ name, price, setTotalPrice, id, userId, count }) {
+    const [quantity, setQuantity] = useState(count)
 
     useEffect(() => {
-        setTotalPrice(prev => prev + price)
+        setTotalPrice(prev => prev + +price)
     }, [setTotalPrice, price])
 
     function add() {
-        setQuantity(prev => prev + 1)
-        setTotalPrice(prev => prev + price)
+        setQuantity(prev => {
+            (async function () {
+                const body = { productId: id, userId: userId, count: prev + 1 }
+                const res = await fetch('http://localhost:3002/busket/edit', {
+                    headers: {
+                        "Content-Type": 'application/json',
+                    },
+                    method: 'POST',
+                    body: JSON.stringify(body)
+                })
+                const data = await res.json()
+                if (data.error) {
+                    alert(data.error)
+                }
+            })()
+
+            return prev + 1
+        })
+        setTotalPrice(prev => prev + +price)
+
     }
 
     function remove() {
-        setQuantity(prev => prev === 1 ? prev : prev - 1)
-        setTotalPrice(prev => prev - price)
+        setQuantity(prev => {
+            (async function () {
+                const body = { productId: id, userId: userId, count: prev === 1 ? prev : prev - 1 }
+                const res = await fetch('http://localhost:3002/busket/edit', {
+                    headers: {
+                        "Content-Type": 'application/json',
+                    },
+                    method: 'POST',
+                    body: JSON.stringify(body)
+                })
+                const data = await res.json()
+                if (data.error) {
+                    alert(data.error)
+                }
+            })()
+            return prev === 1 ? prev : prev - 1
+        })
+        setTotalPrice(prev => prev - +price)
     }
 
     return (
@@ -73,7 +107,7 @@ function BurgerInfo({ name, price, setTotalPrice }) {
             <div style={{
                 fontSize: '24px',
                 marginTop: '50px'
-            }}>{price * quantity}</div>
+            }}>{+price * quantity}</div>
         </div >
     )
 }
