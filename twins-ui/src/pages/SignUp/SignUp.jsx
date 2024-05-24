@@ -137,6 +137,7 @@ function SignUp() {
                             fontSize: '18px',
                             background: 'none'
                         }}
+                            type='password'
                             value={password}
                             onChange={(e) => setPassword(e.target.value)}
                             placeholder="Password Here"

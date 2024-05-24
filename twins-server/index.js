@@ -295,7 +295,7 @@ connection.query('SELECT * FROM USERS', (err, res) => {
 
 // connection.query('Drop table Cards')
 
-// connection.query('CREATE TABLE Burgers(id int AUTO_INCREMENT PRIMARY KEY, name text, price text, src LONGTEXT)')
+// connection.query('CREATE TABLE Burgers(id int AUTO_INCREMENT PRIMARY KEY, name text, price text, src LONGTEXT, type text)')
 
 // connection.query('CREATE TABLE Cards(id int AUTO_INCREMENT PRIMARY KEY, card text, expiration text, code text, owner text, userId int)')
 // connection.query('CREATE TABLE Ingredients (id int AUTO_INCREMENT PRIMARY KEY, name text, src LONGTEXT)')

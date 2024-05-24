@@ -128,7 +128,7 @@ function HomePage() {
                     color: 'white',
                     fontSize: '40px',
                     textAlign: 'center',
-                    padding: '40px 120px',
+                    padding: '10px 80px',
                     borderRadius: '50px',
                     background: '#AD1C23',
                     border: '0px',

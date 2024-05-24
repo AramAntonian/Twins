@@ -90,7 +90,7 @@ function AddBurger({ product }) {
             {
                 page === 'burger' ?
                     <div style={{
-                        padding: '200px 50px'
+                        padding: '200px 150px'
                     }}>
                         <div style={{
                             display: 'flex',
@@ -117,12 +117,14 @@ function AddBurger({ product }) {
                                 }}>{!photo ? 'Click to add image' : <img src={photo} alt='burger' style={{
                                     backgroundRepeat: 'no-repeat',
                                     backgroundSize: 'cover',
+                                    width: '250px',
+                                    height:'250px'
                                 }} />}</div>
                             <div style={{
                                 display: 'flex',
                                 flexDirection: 'column',
                                 gap: '30px',
-                                marginTop: " 10px"
+                                marginTop: " 30px"
                             }}>
                                 <input value={name} onChange={(e) => setName(e.target.value)} style={{ fontWeight: "600", fontSize: '28px', background: 'none' }} placeholder="Add product name" />
                                 <input value={price} onChange={(e) => setPrice(e.target.value)} style={{ fontSize: '22px', background: 'none' }} placeholder="add product price" />

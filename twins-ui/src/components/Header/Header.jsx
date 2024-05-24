@@ -21,7 +21,12 @@ function Header() {
     }, [])
 
     function handleRouting(route) {
-        if (route !== '/profile') {
+        if (route === '/contact') {
+            window.scrollTo({
+                top: document.documentElement.scrollHeight,
+                behavior: 'smooth'
+            });
+        } else if (route !== '/profile') {
             navigate(route)
         } else {
             if (user.fullName) {
@@ -92,12 +97,17 @@ function Header() {
                     }}
                     onClick={() => handleRouting('/profile')}
                 ><img src={window.location.href.includes('user/') ? profile_yellow : profile} alt='profile' width={"35x"} /></div>
-                <div
-                    style={{
-                        cursor: 'pointer'
-                    }}
-                    onClick={() => handleRouting('/busket')}
-                ><img src={window.location.href.includes('busket') ? busket_yellow : busket} alt='busket' width={"35x"} /></div>
+                {
+                    !user.fullName?.includes('ADMIN') ?
+
+                        <div
+                            style={{
+                                cursor: 'pointer'
+                            }}
+                            onClick={() => handleRouting('/busket')}
+                        ><img src={window.location.href.includes('busket') ? busket_yellow : busket} alt='busket' width={"35x"} /></div>
+                        : null
+                }
             </div>
             <div style={{
                 background: 'black',
