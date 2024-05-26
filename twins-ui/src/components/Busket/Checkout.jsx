@@ -1,12 +1,16 @@
 import { useEffect, useState } from "react"
 import CheckedBurger from "./CheckedBurger"
 import ThankYou from "./ThankYou"
-import { Navigate, useNavigate } from "react-router"
+import { useNavigate } from "react-router"
 
-function Checkout({ list, userId }) {
+function Checkout({ list, userId, username }) {
     const [totalPrice, setTotalPrice] = useState(0)
     const [buy, setBuy] = useState(false)
     const navigate = useNavigate()
+    const [card, setCard] = useState('')
+    const [type, setType] = useState('d')
+    const [address, setAddress] = useState('')
+
     useEffect(() => {
         if (buy) {
             setTimeout(() => {
@@ -14,7 +18,41 @@ function Checkout({ list, userId }) {
                 navigate('/')
             }, 3000)
         }
-    }, [buy])
+    }, [buy, navigate])
+
+    useEffect(() => {
+        (async function () {
+            const body = { userId }
+            const res = await fetch('http://localhost:3002/cards', {
+                headers: {
+                    "Content-Type": 'application/json',
+                },
+                method: 'POST',
+                body: JSON.stringify(body)
+            })
+            const data = await res.json()
+            if (data.error) {
+                alert(data.error)
+            } else {
+                for (let el of data.cards) {
+                    if (el.selected) {
+                        setCard(el.card)
+                        break;
+                    }
+                }
+            }
+        })()
+    }, [userId])
+
+    function cardChange() {
+        navigate('/user/' + username + '/addCard', { state: { from: 'checkout' } })
+    }
+
+    useEffect(() => {
+        if(type === 'p'){
+            setAddress('')
+        }
+    }, [type])
 
     return (
         <div style={{
@@ -37,13 +75,13 @@ function Checkout({ list, userId }) {
                     <label style={{
                         fontSize: '20px'
                     }}>
-                        <input type="radio" name="choice" value="Option1" />
+                        <input type="radio" name="choice" value="Option1" onChange={(e) => { setType(e.target.value ? 'd' : '') }} checked={type === 'd' ? true : false} />
                         Delivery
                     </label>
                     <label style={{
                         fontSize: '20px'
                     }}>
-                        <input type="radio" name="choice" value="Option2" />
+                        <input type="radio" name="choice" value="Option2" onChange={(e) => { setType(e.target.value ? 'p' : '') }} checked={type === 'p' ? true : false} />
                         Pick up
                     </label>
                 </form>
@@ -56,6 +94,8 @@ function Checkout({ list, userId }) {
                         fontSize: '30px'
                     }}>Address</div>
                     <textarea
+                        value={address}
+                        onChange={(e) => { setAddress(e.target.value) }}
                         style={{
                             width: '250px',
                             height: '80px',
@@ -63,7 +103,9 @@ function Checkout({ list, userId }) {
                             resize: 'none',
                             border: '1px solid #E0A24E',
                             background: '#D9D9D9'
-                        }} />
+                        }}
+                        readOnly={type === 'p'}
+                    />
                 </div>
                 <div style={{
                     display: 'flex',
@@ -76,7 +118,9 @@ function Checkout({ list, userId }) {
                     <div style={{
                         fontSize: '20px'
                     }}>Card number</div>
-                    <textarea
+                    <input
+                        value={card}
+                        onChange={(e) => { }}
                         style={{
                             width: '250px',
                             height: '30px',
@@ -85,7 +129,15 @@ function Checkout({ list, userId }) {
                             border: '1px solid #E0A24E',
                             background: '#D9D9D9'
                         }} />
-                    <div>change card</div>
+                    <div
+                        onClick={cardChange}
+                        style={{
+                            display: 'flex',
+                            justifyContent: "flex-end",
+                            width: '250px',
+                            color: '#AD1C23',
+                            cursor: 'pointer'
+                        }}>change card</div>
                 </div>
             </div>
             <div style={{
@@ -93,12 +145,13 @@ function Checkout({ list, userId }) {
             }}>
                 <div style={{
                     textAlign: 'center',
-                    fontSize: '30px'
+                    fontSize: '30px',
+                    marginLeft: '25px'
                 }}>Order summary</div>
                 <div>
                     {
                         list.map((el, idx) => (
-                            <CheckedBurger name={el.name} photo = {el.src} price={el.price} setTotalPrice={setTotalPrice} key={idx} id = {el.id} userId={userId}  count={el.count}/>
+                            <CheckedBurger name={el.name} photo={el.src} price={el.price} setTotalPrice={setTotalPrice} key={idx} id={el.id} userId={userId} count={el.count} />
                         ))
                     }
                 </div>

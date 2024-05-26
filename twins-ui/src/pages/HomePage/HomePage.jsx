@@ -1,6 +1,5 @@
 import Header from "../../components/Header/Header"
 import bg from '../../components/svg/burger_background.svg'
-import bg_paper from '../../components/svg/bg_paper.svg'
 import chees from '../../components/svg/cheesburger.svg'
 import bacon from '../../components/svg/bacon.svg'
 import chicken from '../../components/svg/chiken.svg'
@@ -11,12 +10,43 @@ import Footer from "../../components/Footer/Footer"
 
 function HomePage() {
     const [burger, setBurger] = useState(0)
+    const [anim, setAnim] = useState(0)
 
     function handleArrowClick(direction) {
         if (direction === 'left') {
-            setBurger(prev => prev - 1)
+            setTimeout(() => {
+                setAnim(prev => {
+                    if (prev === 0) {
+                        return 2
+                    } else {
+                        return prev - 1
+                    }
+                })
+            }, 100)
+            setBurger(prev => {
+                if (prev === 0) {
+                    return 2
+                } else {
+                    return prev - 1
+                }
+            })
         } else {
-            setBurger(prev => prev + 1)
+            setTimeout(() => {
+                setAnim(prev => {
+                    if (prev === 2) {
+                        return 0
+                    } else {
+                        return prev + 1
+                    }
+                })
+            }, 100)
+            setBurger(prev => {
+                if (prev === 2) {
+                    return 0
+                } else {
+                    return prev + 1
+                }
+            })
         }
     }
 
@@ -40,89 +70,108 @@ function HomePage() {
 
                 }}>
                     <span style={{
-                        fontSize: '98px'
+                        fontSize: '64px'
                     }}>Our<br /> Story<br /></span>
                     <span style={{
-                        fontSize: '24px'
+                        fontSize: '22px'
                     }}>Nestled in a bustling corner, our burger shop isn't<br /> just about food: it's a haven of sizzling patties,<br /> creative toppings, and warm smiles. Beyond the<br /> delicious aroma, it's the sense of community that<br /> keeps our customers coming back for more</span>
                 </div>
             </div>
             <div style={{
-                backgroundImage: `url(${bg_paper})`,
                 width: '100%',
-                backgroundSize: 'cover',
+                background: 'white',
                 display: 'flex',
                 flexDirection: 'column',
                 alignItems: 'center',
                 gap: '100px',
-                padding: '200px 0'
+                padding: '10px 0'
             }}>
                 <div style={{
                     color: '#E8B754',
-                    fontSize: '48px',
+                    fontSize: '40px',
                     fontWeight: 'bolder'
                 }}>Best sellers</div>
                 <div style={{
                     display: 'flex',
                     flexDirection: 'row',
                     position: 'relative',
+                    width: '100%',
                     justifyContent: 'center',
                     alignItems: 'center'
                 }}>
                     <div style={{
                         position: 'absolute',
-                        width: '50%',
+                        width: '100%',
                         display: 'flex',
-                        justifyContent: 'space-between',
+                        top: '50%',
+                        left: '50%',
+                        transform: 'translate(-50%, -50%)',
+                        justifyContent: 'space-evenly',
                         transitionDuration: '1s'
                     }}>
                         <img src={arrowL}
                             onClick={() => handleArrowClick('left')}
                             alt='arrowL' style={{
-                                visibility: burger ? 'visible' : 'hidden',
                                 cursor: 'pointer'
                             }} />
                         <img src={arrowL}
                             onClick={handleArrowClick}
                             alt='arrowL' style={{
-                                visibility: burger !== 2 ? 'visible' : 'hidden',
                                 cursor: 'pointer',
                                 rotate: '180deg'
                             }} />
                     </div>
                     <div style={{
                         display: 'flex',
-                        flexDirection: 'column',
+                        transitionDuration: '0.5s',
                         alignItems: 'center',
-                        order: !burger ? 1 : 0
+                        justifyContent: 'center',
+                        minHeight: '400px',
+                        marginLeft: !burger ? '400px' : burger === 1 ? '0' : '-450px'
                     }}>
-                        <img src={chees} alt='cheesburger' width={burger ? 360 : 480} />
+
                         <div style={{
-                            fontSize: burger ? '30px' : '48px',
-                        }}>Original Cheeseburger</div>
-                    </div>
-                    <div style={{
-                        display: 'flex',
-                        flexDirection: 'column',
-                        alignItems: 'center',
-                        order: burger === 1 ? 1 : !burger ? 0 : 2
-                    }}>
-                        <img src={bacon} alt='bacon' width={burger !== 1 ? 360 : 480} />
+                            display: 'flex',
+                            flexDirection: 'column',
+                            alignItems: 'center',
+                        }}>
+                            <img src={chees} alt='cheesburger' style={{
+                                width: anim ? 180 : 360,
+                                transitionDuration: '0.5s'
+                            }} />
+                            <div style={{
+                                fontSize: burger ? '24px' : '32px',
+                            }}>Original Cheeseburger</div>
+                        </div>
                         <div style={{
-                            fontSize: burger !== 1 ? '30px' : '48px'
-                        }}>Bacon Truffle</div>
-                    </div>
-                    <div style={{
-                        display: 'flex',
-                        flexDirection: 'column',
-                        alignItems: 'center',
-                        order: burger === 2 ? 1 : 2
-                    }}>
-                        <img src={chicken} alt='chicken' width={burger !== 2 ? 360 : 480} />
+                            display: 'flex',
+                            flexDirection: 'column',
+                            alignItems: 'center',
+                        }}>
+                            <img src={bacon} alt='bacon' style={{
+                                width: anim !== 1 ? 180 : 360,
+                                transitionDuration: '0.5s'
+                            }} />
+                            <div style={{
+                                fontSize: anim !== 1 ? '24px' : '32px',
+                                transitionDuration: '0.5s'
+                            }}>Bacon Truffle</div>
+                        </div>
                         <div style={{
-                            fontSize: burger !== 2 ? '30px' : '48px'
-                        }}>Crispy Chicken Royale</div>
+                            display: 'flex',
+                            flexDirection: 'column',
+                            alignItems: 'center',
+                        }}>
+                            <img src={chicken} alt='chicken' style={{
+                                width: anim !== 2 ? 180 : 360,
+                                transitionDuration: '0.5s'
+                            }} />
+                            <div style={{
+                                fontSize: anim !== 2 ? '24px' : '32px'
+                            }}>Crispy Chicken Royale</div>
+                        </div>
                     </div>
+
                 </div>
                 <div><button style={{
                     color: 'white',
@@ -137,14 +186,10 @@ function HomePage() {
             </div>
             <div style={{
                 backgroundImage: `url(${delivery})`,
-                padding: '150px',
                 backgroundSize: 'cover',
-                height: '500px'
+                height: '770px'
             }}>
-                <div style={{
-                    color: 'white',
-                    fontSize: '64px'
-                }}>Delivery <br />11:00-01:00</div>
+
             </div>
             <Footer />
         </div>

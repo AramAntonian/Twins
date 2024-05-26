@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import Header from "../Header/Header";
-import bg from '../svg/paper_black.svg'
+import bg from '../svg/h_f_paper.png'
 import Footer from "../Footer/Footer";
 import add from '../svg/add.svg'
 import { useNavigate } from "react-router";
@@ -51,16 +51,21 @@ function Menu() {
         <div>
             <Header />
             <div style={{
+                height: '50px',
+                background: 'black'
+            }} />
+            <img src={bg} alt='paper' style={{
+                width: '100%'
+            }} />
+            <div style={{
                 height: '100px',
-                background: 'black',
                 width: '100%',
                 position: 'relative'
             }} />
             <div style={{
-                background: 'black',
                 padding: '130px 0',
-                backgroundImage: `url(${bg})`
             }}>
+
                 <div style={{
                     display: 'flex',
                     justifyContent: 'center',
@@ -123,30 +128,14 @@ function Menu() {
                                     display: 'flex',
                                     flexWrap: 'wrap',
                                     justifyContent: 'center',
-                                    gap: '100px',
+                                    gap: '50px',
                                 }}>
                                     {
                                         list.map((el, idx) => (
-                                            <Product key={idx} name={el.name} price={el.price + 'AMD'} src={el.src} id={el.id} setFlag={setFlag} />
+                                            <Product key={idx} name={el.name} price={el.price + 'AMD'} src={el.src} id={el.id} setFlag={setFlag} ingredients={el.ingredients} type={'burgers'} />
                                         ))
                                     }
                                 </div>
-                                {/* <div style={{
-                                    marginTop: '100px'
-                                }}>
-                                    <div style={{
-                                        fontSize: '48px',
-                                        color: '#AD1C23',
-                                        marginBottom: '50px'
-                                    }}>Double trouble smashburgers</div>
-                                    <div style={{
-                                        display: 'flex',
-                                        flexWrap: 'wrap',
-                                        justifyContent: 'center',
-                                        gap: '100px',
-                                    }}>
-                                    </div>
-                                </div> */}
                             </div>
                             : choosen === 'fries' ?
                                 <div style={{
@@ -157,7 +146,7 @@ function Menu() {
                                         display: 'flex',
                                         flexWrap: 'wrap',
                                         justifyContent: 'center',
-                                        gap: '100px',
+                                        gap: '50px',
                                     }}>
                                         {
                                             list.map((el, idx) => (
@@ -175,7 +164,7 @@ function Menu() {
                                             display: 'flex',
                                             flexWrap: 'wrap',
                                             justifyContent: 'center',
-                                            gap: '100px',
+                                            gap: '50px',
                                         }}>
                                             {
                                                 list.map((el, idx) => (
@@ -193,7 +182,7 @@ function Menu() {
                                             display: 'flex',
                                             flexWrap: 'wrap',
                                             justifyContent: 'center',
-                                            gap: '100px',
+                                            gap: '50px',
                                         }}>
                                             {
                                                 list.map((el, idx) => (
@@ -210,6 +199,11 @@ function Menu() {
                         : null
                 }
             </div>
+            <img src={bg} alt='paper' style={{
+                width: '100%',
+                rotate: '180deg',
+                height: '100px'
+            }} />
 
             <Footer />
         </div >

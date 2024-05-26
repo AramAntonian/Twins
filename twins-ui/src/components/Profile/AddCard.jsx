@@ -3,7 +3,7 @@ import bg from '../../components/svg/bg_signin.svg'
 import Footer from '../Footer/Footer'
 import Header from '../Header/Header'
 import CardInput from './CardInput'
-import { useNavigate } from 'react-router-dom'
+import { useLocation, useNavigate } from 'react-router-dom'
 
 function AddCard() {
     const [side, setSide] = useState(false)
@@ -11,6 +11,10 @@ function AddCard() {
     const navigate = useNavigate()
     const [cards, setCards] = useState([])
     const [deleted, setDeleted] = useState(false)
+    const [selectedCard, setSelectedCard] = useState(-1)
+    const location = useLocation();
+    const { from } = location.state || {};
+
 
     useEffect(() => {
         (async function () {
@@ -40,6 +44,12 @@ function AddCard() {
                     alert(data.error)
                 } else {
                     setCards(data.cards)
+                    for (let el of data.cards) {
+                        if (el.selected) {
+                            setSelectedCard(el.id)
+                            break;
+                        }
+                    }
                 }
             })()
         }
@@ -49,6 +59,33 @@ function AddCard() {
     useEffect(() => {
         console.log(side);
     }, [side])
+
+    function handleSave() {
+        if (cards.length) {
+            (async function () {
+                const body = { id: selectedCard, userId: user.id }
+                const res = await fetch('http://localhost:3002/user/card', {
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    method: 'POST',
+                    body: JSON.stringify(body)
+                });
+                const data = await res.json()
+                if (data.error) {
+                    alert(data.error)
+                } else {
+                    if (from === 'checkout') {
+                        navigate('/busket', { state: { from: 'card' } })
+                    } else {
+                        navigate('/user/' + user.fullName)
+                    }
+                }
+            })()
+        } else {
+            alert('add card to continue')
+        }
+    }
 
     return (
         <div>
@@ -99,7 +136,7 @@ function AddCard() {
                         width: '100%',
                         zIndex: 2,
                     }}>
-                        <CardInput side={side} userId={user?.id} setSide={setSide} cardList={cards} setDeleted={setDeleted} />
+                        <CardInput side={side} userId={user?.id} setSide={setSide} cardList={cards} setDeleted={setDeleted} selectedCard={selectedCard} setSelectedCard={setSelectedCard} />
                     </div>
 
                     {
@@ -117,17 +154,18 @@ function AddCard() {
                                         color: 'white',
                                         borderRadius: '15px'
                                     }}>Add Card</div>
-                                <div 
-                                    onClick = {() => { navigate(`/user/${user?.fullname}`) }}
-                                style={{
-                                    padding: side ? '10px 0' : '5px 20px',
-                                    background: "#E0A24E",
-                                    zIndex: 2,
-                                    color: 'white',
-                                    borderRadius: '15px',
-                                    width: side ? '100%' : '',
-                                    textAlign: 'center'
-                                }}>Save Card</div>
+                                <div
+                                    onClick={handleSave}
+                                    style={{
+                                        padding: side ? '10px 0' : '5px 20px',
+                                        background: "#E0A24E",
+                                        zIndex: 2,
+                                        color: 'white',
+                                        borderRadius: '15px',
+                                        cursor: 'pointer',
+                                        width: side ? '100%' : '',
+                                        textAlign: 'center'
+                                    }}>Save Card</div>
                             </div>
                             : null
                     }

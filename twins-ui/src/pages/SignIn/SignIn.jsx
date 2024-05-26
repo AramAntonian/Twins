@@ -4,11 +4,14 @@ import Header from "../../components/Header/Header";
 import bg from '../../components/svg/bg_signin.svg'
 import { useNavigate } from "react-router-dom"
 import or from '../../components/svg/or.svg'
+import ceye from '../../components/svg/ceye.svg'
+import eye from '../../components/svg/eye.svg'
 
 
 function SignIn() {
     const [phone, setPhone] = useState('')
     const [password, setPassword] = useState('')
+    const [open, setOpen] = useState(false)
     const navigate = useNavigate()
 
     function signIn() {
@@ -111,7 +114,7 @@ function SignIn() {
                             placeholder="Phone Number Here"
                         />
                     </div>
-                    <div style={{ zIndex: 2, color: "white", fontSize: '50px', display: 'flex', flexDirection: 'column', gap: '10px', marginTop: '10px' }}>
+                    <div style={{ zIndex: 2, color: "white", fontSize: '50px', display: 'flex', flexDirection: 'column', gap: '10px', marginTop: '10px', position: 'relative' }}>
                         <span style={{ fontSize: '28px' }}>Password</span>
                         <input style={{
                             width: '100%',
@@ -123,9 +126,16 @@ function SignIn() {
                             background: 'none'
                         }}
                             value={password}
+                            type={open ? 'text' : 'password'}
                             onChange={(e) => setPassword(e.target.value)}
                             placeholder="Password Here"
                         />
+                        <img src={open ? eye : ceye} alt='eye' onClick={() => { setOpen(prev => !prev) }} style={{
+                            position: 'absolute',
+                            top: '60px',
+                            cursor: "pointer",
+                            right: '10px'
+                        }} />
                         <div style={{
                             display: 'flex',
                             justifyContent: 'flex-end'

@@ -1,11 +1,13 @@
-const { useState, useEffect } = require("react")
+import { useState } from 'react'
 
-function CardInput({ side, userId, setSide, cardList, setDeleted }) {
+function CardInput({ side, userId, setSide, cardList, setDeleted, setSelectedCard, selectedCard }) {
     const [numbers, setNumbers] = useState('')
     const [month, setMonth] = useState('')
     const [year, setYear] = useState('')
     const [code, setCode] = useState('')
     const [owner, setOwner] = useState('')
+
+
 
 
     function deleteCard(card) {
@@ -41,7 +43,7 @@ function CardInput({ side, userId, setSide, cardList, setDeleted }) {
                 if (year && year >= 24) {
                     expire += '/' + year
                     reqBody.expiration = expire
-                    if (code && code.length === 4) {
+                    if (code && code.length === 3) {
                         reqBody.code = code
                         const fullNameRegex = /^[a-zA-Z]+(([',. -][a-zA-Z ])?[a-zA-Z]*)*$/
                         if (owner && fullNameRegex.test(owner)) {
@@ -59,7 +61,6 @@ function CardInput({ side, userId, setSide, cardList, setDeleted }) {
                                     if (data.error) {
                                         alert(data.error)
                                     } else {
-                                        alert('i')
                                         setSide(false)
                                     }
                                 })()
@@ -81,6 +82,14 @@ function CardInput({ side, userId, setSide, cardList, setDeleted }) {
     }
 
 
+    function handleCardChange(id, checked) {
+        if (checked) {
+            setSelectedCard(id)
+        } else {
+            setSelectedCard(-1)
+        }
+    }
+
     const handleChange = (e, setValue) => {
         const newValue = e.target.value;
         if (/^\d*$/.test(newValue)) {
@@ -100,6 +109,9 @@ function CardInput({ side, userId, setSide, cardList, setDeleted }) {
                                     borderBottom: '1px solid #E0A24E',
                                     alignItems: 'center',
                                 }}>
+                                    <input type="checkbox" checked={selectedCard === el?.id} onClick={(e) => { handleCardChange(el?.id, e.target.checked) }} style={{
+                                        width: '20px',
+                                    }} />
                                     <input style={{
                                         fontSize: '18px',
                                         color: 'white',
@@ -203,8 +215,8 @@ function CardInput({ side, userId, setSide, cardList, setDeleted }) {
                             }}
                                 value={code}
                                 onChange={(e) => { handleChange(e, setCode) }}
-                                maxLength={4}
-                                placeholder="0000"
+                                maxLength={3}
+                                placeholder="000"
                             />
                         </div>
                         <div style={{

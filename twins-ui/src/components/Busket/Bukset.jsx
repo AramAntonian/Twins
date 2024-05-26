@@ -3,19 +3,28 @@ import Footer from '../Footer/Footer'
 import Header from '../Header/Header'
 import BurgerInfo from './BurgerInfo'
 import Checkout from './Checkout'
+import { useLocation } from 'react-router'
 
 function Busket() {
     const [totalPrice, setTotalPrice] = useState(0)
     const [checkout, setCheckout] = useState(false)
     const [busket, setBusket] = useState([])
     const [user, setUser] = useState({})
+    const location = useLocation()
+    const { from } = location.state || {}
+
+    useEffect(() => {
+        if (from === 'card') {
+            setCheckout(true)
+        }
+    }, [from])
 
     useEffect(() => {
         const r = localStorage.getItem('USER')
         if (r) {
             (async function () {
                 const d = JSON.parse(r)
-                setUser(r)
+                setUser(d)
                 const body = { userId: d.id }
                 const res = await fetch('http://localhost:3002/busket', {
                     headers: {
@@ -86,7 +95,7 @@ function Busket() {
                                 </div>
                                 {
                                     busket?.map(el => (
-                                        <BurgerInfo name={el.name} price={el.price} setTotalPrice={setTotalPrice} id={el.id} userId={user.id} count = {el.count}/>
+                                        <BurgerInfo name={el.name} price={el.price} setTotalPrice={setTotalPrice} id={el.id} userId={user.id} count={el.count} photo={el.src} />
                                     ))
                                 }
                                 <div style={{
@@ -116,7 +125,7 @@ function Busket() {
                                     <div style={{ fontSize: '24px' }}>Total: {totalPrice} AMD</div>
                                 </div>
                             </>
-                            : <Checkout list={busket} userId={ user.id} />
+                            : <Checkout list={busket} userId={user.id} username={user.fullName} />
                     }
                 </div>
             </div>

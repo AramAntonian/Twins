@@ -2,33 +2,38 @@ import { useParams } from 'react-router'
 import Footer from '../../../components/Footer/Footer'
 import Header from '../../../components/Header/Header'
 import AddBurger from './AddBurger'
-import bg_paper from '../../../components/svg/bg_paper.svg'
+import paper from '../../../components/svg/h_f_paper.png'
 
 function AddProdcutPage() {
     const { product } = useParams()
 
     return (
         <div style={{
-            background: 'black'
+            display: 'flex',
+            flexDirection: 'column',
+            gap: '0',
+            background: 'white'
         }}>
-            {/* <img src={bg_paper} alt='bg' style={{
-                position: 'absolute',
-                top: 100,
-                left: 0,
-                width: '100%',
-            }} /> */}
-            <Header />
             <div style={{
                 background: 'black',
-                padding: '100px 0'
-            }}>
-                <div style={{
-                    background: 'black',
-                    backgroundImage: `url(${bg_paper})`
-                }}>
-                    <AddBurger product={product} />
-                </div>
-            </div>
+                height: '50px'
+            }}></div>
+            <Header />
+
+            <img src={paper} alt='paper' style={{
+                width: '100%',
+                backgroundSize: 'cover',
+                backgroundRepeat: 'no-repeat'
+            }} />
+
+
+            <AddBurger product={product} />
+            <img src={paper} alt='paper' style={{
+                width: '100%',
+                rotate: '180deg',
+                height: '100px'
+            }} />
+
             <Footer />
 
         </div>

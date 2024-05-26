@@ -3,12 +3,15 @@ import Footer from "../../components/Footer/Footer";
 import Header from "../../components/Header/Header";
 import bg from '../../components/svg/bg_signin.svg'
 import or from '../../components/svg/or.svg'
+import ceye from '../../components/svg/ceye.svg'
+import eye from '../../components/svg/eye.svg'
 import { useNavigate } from "react-router-dom"
 
 function SignUp() {
     const [fullName, setFullName] = useState('')
     const [phone, setPhone] = useState('')
     const [password, setPassword] = useState('')
+    const [open, setOpen] = useState(false)
     const navigate = useNavigate()
 
     function signUp() {
@@ -126,7 +129,7 @@ function SignUp() {
                             placeholder="Phone Number Here"
                         />
                     </div>
-                    <div style={{ zIndex: 2, color: "white", fontSize: '50px', display: 'flex', flexDirection: 'column', gap: '10px', marginTop: '10px' }}>
+                    <div style={{ zIndex: 2, color: "white", fontSize: '50px', display: 'flex', flexDirection: 'column', gap: '10px', marginTop: '10px', position: 'relative' }}>
                         <span style={{ fontSize: '28px' }}>Password</span>
                         <input style={{
                             width: '100%',
@@ -137,11 +140,17 @@ function SignUp() {
                             fontSize: '18px',
                             background: 'none'
                         }}
-                            type='password'
+                            type={open ? 'text' : 'password'}
                             value={password}
                             onChange={(e) => setPassword(e.target.value)}
                             placeholder="Password Here"
                         />
+                        <img src={open ? eye : ceye} alt='eye' onClick={() => { setOpen(prev => !prev) }} style={{
+                            position: 'absolute',
+                            top: '60px',
+                            cursor: "pointer",
+                            right: '10px'
+                        }} />
                     </div>
                     <div style={{
                         width: '100%',

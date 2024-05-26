@@ -121,6 +121,32 @@ app.delete('/card', (req, res) => {
   })
 })
 
+app.post('/user/card', async (req, res) => {
+  const { id, userId } = req.body;
+
+  try {
+    // Fetch all cards for the user
+    const [cards] = await connection.promise().query('SELECT * FROM Cards WHERE userId = ?', [userId]);
+
+    // Update the selected status for each card
+    const updatePromises = cards.map(card => {
+      const selected = (card.id === id) ? 1 : 0;
+      return connection.promise().query('UPDATE Cards SET selected = ? WHERE id = ? AND userId = ?', [selected, card.id, userId]);
+    });
+
+    // Wait for all update queries to complete
+    await Promise.all(updatePromises);
+
+    // Send a success response
+    res.status(200).send({ message: 'Cards updated successfully' });
+
+  } catch (err) {
+    // Handle errors
+    res.status(500).send({ error: err.message });
+  }
+});
+
+
 app.post('/cards', (req, res) => {
   const { userId } = req.body
   connection.query('SELECT * FROM Cards WHERE userId = ?', [userId], (err, cards) => {
@@ -176,16 +202,79 @@ app.post('/ingredient', (req, res) => {
   })
 })
 
-app.post('/menu', (req, res) => {
-  const { type } = req.body
-  connection.query('SELECT * FROM Products WHERE type = ?', [type], (err, menu) => {
+app.delete('/product', (req, res) => {
+  const { id } = req.body
+  console.log(id)
+  connection.query('DELETE FROM Products WHERE id = ?', [id], (err) => {
     if (err) {
-      res.status(500).send({ error: err.message })
+      return res.status(500).send({ error: err.message })
     } else {
-      res.status(200).send({ menu })
+      connection.query('DELETE FROM Busket WHERE productId = ?', [id], (err) => {
+        if (err) {
+          return res.status(500).send({ error: err.message })
+        } else {
+          res.status(200).send({ success: true })
+        }
+      })
     }
   })
+
 })
+
+app.post('/menu', async (req, res) => {
+  const { type } = req.body;
+
+  try {
+    // Fetch all products
+    const products = await new Promise((resolve, reject) => {
+      connection.query('SELECT * FROM Products', (err, results) => {
+        if (err) return reject(err);
+        resolve(results);
+      });
+    });
+
+    // Update each product's ingredients
+    for (const product of products) {
+      const newIngs = [];
+
+      for (const ingredientId of product.ingredients) {
+        const ingredient = await new Promise((resolve, reject) => {
+          connection.query('SELECT * FROM Ingredients WHERE id = ?', [ingredientId], (err, results) => {
+            if (err) return reject(err);
+            resolve(results[0]);
+          });
+        });
+
+        if (ingredient) {
+          newIngs.push(ingredient.id);
+        }
+      }
+
+      await new Promise((resolve, reject) => {
+        connection.query('UPDATE Products SET ingredients = ? WHERE id = ?', [JSON.stringify(newIngs), product.id], (err) => {
+          if (err) return reject(err);
+          resolve();
+        });
+      });
+    }
+
+    // Fetch the updated menu based on type
+    const menu = await new Promise((resolve, reject) => {
+      connection.query('SELECT * FROM Products WHERE type = ?', [type], (err, results) => {
+        if (err) return reject(err);
+        resolve(results);
+      });
+    });
+
+    // Send the response
+    res.status(200).send({ menu });
+
+  } catch (err) {
+    // Handle errors
+    res.status(500).send({ error: err.message });
+  }
+});
+
 
 app.get('/users', (req, res) => {
   connection.query('SELECT * FROM USERS', (err, users) => {
@@ -198,8 +287,9 @@ app.get('/users', (req, res) => {
 })
 
 app.post('/product/edit', (req, res) => {
-  const { name, price, id, photo } = req.body
-  connection.query('UPDATE Products SET name = ?, price = ?, src = ? WHERE id = ?', [name, price, photo, id], (err) => {
+  const { name, price, id, photo, ingredients } = req.body
+  const ingJSON = JSON.stringify(ingredients)
+  connection.query('UPDATE Products SET name = ?, price = ?, src = ?, ingredients = ? WHERE id = ?', [name, price, photo, ingJSON, id], (err) => {
     if (err) {
       res.status(500).send({ error: err.message })
     } else {

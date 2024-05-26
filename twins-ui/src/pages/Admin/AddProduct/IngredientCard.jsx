@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react'
-import def_picture from '../../../components/svg/picture.svg'
 
-function IngredientCard({ el, setFlag, setIngredients }) {
+function IngredientCard({ el, setFlag, setIngredients, hoverEffect }) {
     const [hover, setHover] = useState(false)
     const [quantity, setQuantity] = useState(1)
 
@@ -16,7 +15,7 @@ function IngredientCard({ el, setFlag, setIngredients }) {
     useEffect(() => {
         setIngredients((prev) => {
             prev[el.id + 'q'] = quantity
-            return prev 
+            return prev
         })
     }, [quantity, el, setIngredients])
 
@@ -60,8 +59,8 @@ function IngredientCard({ el, setFlag, setIngredients }) {
 
     return (
         <div
-            onMouseEnter={() => { setHover(true) }}
-            onMouseLeave={() => { setHover(false) }}
+            onMouseEnter={hoverEffect ? () => { setHover(true) } : () => { }}
+            onMouseLeave={hoverEffect ? () => { setHover(false) } : () => { }}
             style={{
                 width: hover ? '275px' : '250px',
                 height: hover ? '325px' : '300px',
@@ -83,19 +82,20 @@ function IngredientCard({ el, setFlag, setIngredients }) {
                 alignItems: 'center',
                 width: '100%'
             }}>
-                <input type='checkbox' 
-                    onClick = {(e) => {handleAdd(e)}}
-                style={{
-                    width: hover ? '55px' : '50px',
-                    height: hover ? '23px' : '20px',
-                    transitionDuration: '0.5s',
-                }} />
+                <input type='checkbox'
+                    onClick={(e) => { handleAdd(e) }}
+                    style={{
+                        width: hover ? '55px' : '50px',
+                        height: hover ? '23px' : '20px',
+                        transitionDuration: '0.5s',
+                    }} />
                 <div
                     onClick={handleDelete}
                     style={{
                         fontSize: hover ? '35px' : '32px',
                         color: "#AD1C23",
                         fontWeight: '200',
+                        display: hoverEffect ? 'block' : 'none',
                         transitionDuration: '0.5s',
                         cursor: 'pointer',
                         fontFamily: 'Roboto, sans-serif'

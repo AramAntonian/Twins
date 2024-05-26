@@ -86,16 +86,20 @@ function AddBurger({ product }) {
     }
 
     return (
-        <>
+        <div style={{
+            background: 'white',
+            minHeight: '500px'
+        }}>
             {
                 page === 'burger' ?
                     <div style={{
-                        padding: '200px 150px'
+                        padding: '0 50px',
                     }}>
                         <div style={{
                             display: 'flex',
                             gap: '100px',
                             padding: '20px 0',
+                            boxSizing: 'border-box',
                             width: '100%',
                             borderBottom: '1px solid #E0A24E',
                             position: 'relative'
@@ -118,7 +122,7 @@ function AddBurger({ product }) {
                                     backgroundRepeat: 'no-repeat',
                                     backgroundSize: 'cover',
                                     width: '250px',
-                                    height:'250px'
+                                    height: '250px'
                                 }} />}</div>
                             <div style={{
                                 display: 'flex',
@@ -189,10 +193,10 @@ function AddBurger({ product }) {
                             ref={inpRef}
                             onChange={(e) => { handlePhotoAdd(e) }}
                         />
-                    </div >
-                    : <AddIngredients setPage={setPage} setIngredients={setIngredients} ingredients={ingredients} />
+                    </div>
+                    : <AddIngredients setPage={setPage} setIngredients={setIngredients}/>
             }
-        </>
+        </div>
     )
 }
 

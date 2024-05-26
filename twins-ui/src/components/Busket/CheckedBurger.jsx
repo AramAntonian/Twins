@@ -49,7 +49,10 @@ function CheckedBurger({ name, price, setTotalPrice, last, id, userId, photo, co
             })()
             return prev === 1 ? prev : prev - 1
         })
-        setTotalPrice(prev => prev - +price)
+        if (quantity !== 1) {
+            setTotalPrice(prev => prev - +price)
+        }
+
     }
 
     return (
@@ -60,7 +63,12 @@ function CheckedBurger({ name, price, setTotalPrice, last, id, userId, photo, co
             width: '100%',
             borderBottom: last ? '1px solid #E0A24E' : ''
         }}>
-            <img src={photo} alt='burger' width={150} />
+            <div style={{
+                width: '200px'
+            }}>
+                <img src={photo} alt='burger' width={150} />
+
+            </div>
             <div style={{
                 display: 'flex',
                 flexDirection: 'column',

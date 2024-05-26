@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import burger from '../svg/cheesburger.svg'
 
 
-function BurgerInfo({ name, price, setTotalPrice, id, userId, count }) {
+function BurgerInfo({ name, price, setTotalPrice, id, userId, photo, count }) {
     const [quantity, setQuantity] = useState(count)
 
     useEffect(() => {
@@ -50,7 +50,10 @@ function BurgerInfo({ name, price, setTotalPrice, id, userId, count }) {
             })()
             return prev === 1 ? prev : prev - 1
         })
-        setTotalPrice(prev => prev - +price)
+        if (quantity !== 1) {
+            setTotalPrice(prev => prev - +price)
+
+        }
     }
 
     return (
@@ -60,7 +63,15 @@ function BurgerInfo({ name, price, setTotalPrice, id, userId, count }) {
             alignItems: 'center',
             borderBottom: '1px solid #E0A24E'
         }}>
-            <img src={burger} alt='burger' width={200} />
+            <div style={{
+                width: '180px',
+                height: '180px',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center'
+            }}>
+                <img src={photo} alt='burger' width={150} height={150} />
+            </div>
             <div style={{
                 marginTop: '50px',
                 fontSize: '24px',

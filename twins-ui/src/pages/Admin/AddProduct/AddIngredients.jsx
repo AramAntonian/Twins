@@ -2,7 +2,7 @@ import IngredientAddCard from "./IngredientAddCard"
 import { useEffect, useState } from "react"
 import IngredientCard from "./IngredientCard"
 
-function AddIngredients({ setPage, setIngredients }) {
+function AddIngredients({ setPage, setIngredients, addBoo }) {
     const [flag, setFlag] = useState(false)
     const [list, setList] = useState([])
 
@@ -29,19 +29,15 @@ function AddIngredients({ setPage, setIngredients }) {
     return (
         <>
             <div style={{
-                padding: '200px 150px',
+                padding: '10px 0px',
                 display: 'flex',
                 alignItems: 'center',
+                justifyContent: 'center',
+                background: 'white',
                 gap: '50px',
-                position: 'relative',
+                position: addBoo ? 'unset' : 'relative',
                 flexWrap: 'wrap'
             }}>
-                {
-                    list.map((el, idx) => (
-                        <IngredientCard el={el} key={idx} setFlag={setFlag} setIngredients={setIngredients} />
-                    ))
-                }
-                <IngredientAddCard setFlag={setFlag} />
                 <div
                     onClick={() => {
                         setIngredients(prev => ({ ...prev }))
@@ -54,12 +50,19 @@ function AddIngredients({ setPage, setIngredients }) {
                         color: 'white',
                         background: '#AD1C23',
                         borderRadius: '30px',
-                        position: 'absolute',
-                        top: '120px',
+                        position: addBoo ? 'absolute' :  'sticky',
+                        top: addBoo ? '10px' : '20px',
                         cursor: 'pointer',
                         fontSize: '24px',
-                        right: '10px'
+                        left: addBoo ? '10%' : '99%'
                     }}>Add ingredients</div>
+                {
+                    list.map((el, idx) => (
+                        <IngredientCard el={el} key={idx} setFlag={setFlag} setIngredients={setIngredients} hoverEffect = {!addBoo} />
+                    ))
+                }
+                <IngredientAddCard setFlag={setFlag} />
+
             </div>
         </>
     )
