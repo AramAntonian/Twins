@@ -11,14 +11,29 @@ function Checkout({ list, userId, username }) {
     const [type, setType] = useState('d')
     const [address, setAddress] = useState('')
 
-    useEffect(() => {
-        if (buy) {
-            setTimeout(() => {
-                setBuy(false)
-                navigate('/')
-            }, 3000)
-        }
-    }, [buy, navigate])
+
+    function handleBuy() {
+        (async function () {
+            const body = { userId: userId }
+            const res = await fetch('http://localhost:3002/busket', {
+                headers: {
+                    "Content-Type": 'application/json',
+                },
+                method: 'DELETE',
+                body: JSON.stringify(body)
+            })
+            const data = await res.json()
+            if (data.error) {
+                alert(data.error)
+            } else {
+                setBuy(true)
+                setTimeout(() => {
+                    setBuy(false)
+                    navigate('/')
+                }, 3000)
+            }
+        })()
+    }
 
     useEffect(() => {
         (async function () {
@@ -49,7 +64,7 @@ function Checkout({ list, userId, username }) {
     }
 
     useEffect(() => {
-        if(type === 'p'){
+        if (type === 'p') {
             setAddress('')
         }
     }, [type])
@@ -171,7 +186,7 @@ function Checkout({ list, userId, username }) {
             }}>
 
                 <div
-                    onClick={() => { setBuy(true) }}
+                    onClick={handleBuy}
                     style={{
                         fontSize: '24px',
                         padding: '5px 30px',

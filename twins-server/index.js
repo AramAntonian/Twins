@@ -147,6 +147,18 @@ app.post('/user/card', async (req, res) => {
 });
 
 
+app.delete('/busket', (req, res) => {
+  const { userId } = req.body
+  console.log(userId)
+  connection.query('DELETE FROM Busket WHERE userId = ?', [userId], (err) => {
+    if (err) {
+      res.status(500).send({ error: err.message })
+    } else {
+      res.status(200).send({ success: true })
+    }
+  })
+})
+
 app.post('/cards', (req, res) => {
   const { userId } = req.body
   connection.query('SELECT * FROM Cards WHERE userId = ?', [userId], (err, cards) => {
@@ -390,7 +402,7 @@ connection.query('SELECT * FROM USERS', (err, res) => {
 // connection.query('CREATE TABLE Cards(id int AUTO_INCREMENT PRIMARY KEY, card text, expiration text, code text, owner text, userId int)')
 // connection.query('CREATE TABLE Ingredients (id int AUTO_INCREMENT PRIMARY KEY, name text, src LONGTEXT)')
 
-
+// connection.query('INSERT INTO USERS(fullName, password, phone) VALUES("ADMIN", "TWINS_ADMIN", "ADMIN")')
 
 // connection.query('CREATE TABLE Busket (id int AUTO_INCREMENT PRIMARY KEY, userId int, productId int, count int)')
 

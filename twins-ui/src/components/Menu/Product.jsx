@@ -23,6 +23,7 @@ function Product({ name, price, src, id, setFlag, ingredients, type }) {
 
     useEffect(() => {
         setIngredientsList([])
+        if(ingredients)
         for (let el of ingredients) {
             if (el) {
                 (async function () {

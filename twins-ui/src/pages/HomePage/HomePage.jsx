@@ -83,7 +83,7 @@ function HomePage() {
                 display: 'flex',
                 flexDirection: 'column',
                 alignItems: 'center',
-                gap: '100px',
+                gap: '20px',
                 padding: '10px 0'
             }}>
                 <div style={{

@@ -9,6 +9,10 @@ function BurgerInfo({ name, price, setTotalPrice, id, userId, photo, count }) {
         setTotalPrice(prev => prev + +price)
     }, [setTotalPrice, price])
 
+    useEffect(() => {
+        setTotalPrice(prev => prev + price*quantity)
+    },[])
+
     function add() {
         setQuantity(prev => {
             (async function () {
